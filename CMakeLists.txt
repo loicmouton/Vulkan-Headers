@@ -27,7 +27,7 @@ project(Vulkan-Headers NONE)
 # Project-wide includes ---------------------------------------------------------------------------------------------------
 # This section includes files usefull across the whole project.
 
-include(VulkanHeadersDirs)
+include(Vulkan-HeadersDirs)
 
 # --------------------------------------------------------------------------------------------------------------------------------
 
@@ -77,12 +77,13 @@ list(TRANSFORM vulkan_headers_INSTALL_PUBLIC_HEADER_FILES PREPEND "${vulkan_head
 
 add_library(Vulkan-Headers INTERFACE)
 add_library(Vulkan::Headers ALIAS Vulkan-Headers)
-target_include_directories(Vulkan-Headers INTERFACE
-    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-    "$<INSTALL_INTERFACE:${vulkan_headers_INSTALL_PUBLIC_HEADER_DIR}>")
+target_include_directories(Vulkan-Headers
+    INTERFACE
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+        "$<INSTALL_INTERFACE:${vulkan_headers_INSTALL_PUBLIC_HEADER_DIR}>")
 set_target_properties(Vulkan-Headers
-  PROPERTIES
-    PUBLIC_HEADER "${vulkan_headers_BUILD_PUBLIC_HEADER_FILES}")
+    PROPERTIES
+        PUBLIC_HEADER "${vulkan_headers_BUILD_PUBLIC_HEADER_FILES}")
 
 set(vulkan_registry_PYTHON_SCRIPTS
     "spec_tools/util.py"
@@ -98,32 +99,33 @@ list(TRANSFORM vulkan_registry_ABSOLUTE_PYTHON_SCRIPTS PREPEND "${vulkan_headers
 
 add_library(Vulkan-Registry INTERFACE)
 add_library(Vulkan::Registry ALIAS Vulkan-Registry)
-target_include_directories(Vulkan-Registry INTERFACE
-    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/registry>"
-    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_DATADIR}/vulkan>")
+target_include_directories(Vulkan-Registry
+    INTERFACE
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/registry>"
+        "$<INSTALL_INTERFACE:${CMAKE_INSTALL_DATADIR}/vulkan>")
 target_sources(Vulkan-Registry INTERFACE ${vulkan_registry_ABSOLUTE_PYTHON_SCRIPTS})
 
 if(VULKAN_HEADERS_INSTALL)
     include(CMakePackageConfigHelpers)
 
-    install(EXPORT VulkanHeadersTargets
+    install(EXPORT Vulkan-HeadersTargets
             DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/vulkan"
             NAMESPACE Vulkan::)
 
     set(cmakeModulesDir "cmake")
-    configure_package_config_file("cmake/VulkanHeadersConfig.cmake.in"
-                                  "${vulkan_headers_BINARY_CONFIG_DIR}/VulkanHeadersConfig.cmake"
+    configure_package_config_file("cmake/Vulkan-HeadersConfig.cmake.in"
+                                  "${vulkan_headers_BINARY_CONFIG_DIR}/Vulkan-HeadersConfig.cmake"
                                   INSTALL_DESTINATION "${vulkan_headers_INSTALL_CONFIG_DIR}")
-    install(FILES "${vulkan_headers_BINARY_CONFIG_DIR}/VulkanHeadersConfig.cmake"
+    install(FILES "${vulkan_headers_BINARY_CONFIG_DIR}/Vulkan-HeadersConfig.cmake"
             DESTINATION "${vulkan_headers_INSTALL_CONFIG_DIR}")
 
-    write_basic_package_version_file("${vulkan_headers_BINARY_CONFIG_DIR}/VulkanHeadersConfigVersion.cmake"
+    write_basic_package_version_file("${vulkan_headers_BINARY_CONFIG_DIR}/Vulkan-HeadersConfigVersion.cmake"
                                      COMPATIBILITY ExactVersion)
-    install(FILES "${vulkan_headers_BINARY_CONFIG_DIR}/VulkanHeadersConfigVersion.cmake"
+    install(FILES "${vulkan_headers_BINARY_CONFIG_DIR}/Vulkan-HeadersConfigVersion.cmake"
             DESTINATION "${vulkan_headers_INSTALL_CONFIG_DIR}")
 
     install(TARGETS ${vulkan_headers_INSTALL_TARGETS}
-            EXPORT VulkanHeadersTargets
+            EXPORT Vulkan-HeadersTargets
             RUNTIME DESTINATION ${vulkan_headers_INSTALL_BIN_DIR}
             LIBRARY DESTINATION ${vulkan_headers_INSTALL_LIB_DIR}
             ARCHIVE DESTINATION ${vulkan_headers_INSTALL_LIB_DIR}
